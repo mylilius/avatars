@@ -30,14 +30,26 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    astar: {
+      url: process.env.ASTAR_RPC_TESTNET,
+      accounts: process.env.PK_TESTNET ? [process.env.PK_TESTNET] : []
+    },
+    mylilius: {
+      url: process.env.MYLILIUS_RPC_TESTNET,
+      accounts: process.env.PK_TESTNET ? [process.env.PK_TESTNET] : []
+    },
+    mumbai: {
+      url: process.env.MUMBAI_RPC_TESTNET,
+      accounts: process.env.PK_TESTNET ? [process.env.PK_TESTNET] : []
+    }
   },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
+  // gasReporter: {
+  //   enabled: process.env.REPORT_GAS !== undefined,
+  //   currency: "USD",
+  // },
+  // etherscan: {
+  //   apiKey: process.env.ETHERSCAN_API_KEY,
+  // },
 };
 
 export default config;
