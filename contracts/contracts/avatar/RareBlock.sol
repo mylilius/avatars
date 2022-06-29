@@ -66,6 +66,4 @@ contract DOTAvatarRareBlock is AccessControlEnumerable, ERC721URIStorage {
     function supportsInterface(bytes4 interfaceId) public view virtual override (ERC721, AccessControlEnumerable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
-
-
 }
