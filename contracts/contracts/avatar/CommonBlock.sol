@@ -5,7 +5,9 @@ import "../../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1
 import "../../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "../../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
-
+/// @title DOT Avatar Common Block
+/// @author TheGreatAxios
+/// @notice ERC721 Contract Representing Common Building Blocks of DOT Avatars
 contract DOTAvatarCommonBlock is AccessControlEnumerable, ERC1155URIStorage {
 
     bytes32 public constant AVATAR_MANAGER_ROLE = keccak256("AVATAR_MANAGER_ROLE");
@@ -43,7 +45,7 @@ contract DOTAvatarCommonBlock is AccessControlEnumerable, ERC1155URIStorage {
     /// @dev Custom Function that can only be called via Proxy
     /// @param _creator address of the creator and initial owner of the NFT
     /// @param _tokenURI string that belongs to the uploaded NFT
-    function createNFT(address _creator, string memory _tokenURI, uint256 _amount) external onlyAvatarManager {
+    function createBlock(address _creator, string memory _tokenURI, uint256 _amount) external onlyAvatarManager returns (uint256) {
 
         uint256 _newTokenId = _tokenIds.current();
         _mint(_creator, _newTokenId, _amount, "");
@@ -51,6 +53,7 @@ contract DOTAvatarCommonBlock is AccessControlEnumerable, ERC1155URIStorage {
 
         _tokenIds.increment();
 
+        return _newTokenId;
     }
 
     /**
