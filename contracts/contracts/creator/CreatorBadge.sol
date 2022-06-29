@@ -6,7 +6,11 @@ import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "../interfaces/ICreatorBadge.sol";
 
+/// @title DOT Avatar Rare Block
+/// @author TheGreatAxios
+/// @notice ERC721 Contract Representing Creator PRO Badges
 contract DOTAvatarCreatorBadge is Ownable, ReentrancyGuard, ERC721 {
 
 
