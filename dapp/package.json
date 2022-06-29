@@ -1,7 +1,24 @@
 {
-  "name": "dapp",
+  "name": "dot_avatars_dapp",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "email": "thegreataxios@mylilius.com",
+    "name": "TheGreatAxios",
+    "url": "https://github.com/TheGreatAxios"
+  },
+  "license": "MIT",
+  "contributors": [
+    {
+      "email": "thegreataxios@mylilius.com",
+      "name": "TheGreatAxios",
+      "url": "https://github.com/TheGreatAxios"
+    }
+  ],
+  "displayName": "DOT Avatars",
+  "repository": {
+    "url": "https://github.com/mylilius/avatars"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
