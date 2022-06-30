@@ -11,7 +11,7 @@ import "../interfaces/ICreatorBadge.sol";
 /// @title DOT Avatar Rare Block
 /// @author TheGreatAxios
 /// @notice ERC721 Contract Representing Creator PRO Badges
-contract DOTAvatarCreatorBadge is Ownable, ReentrancyGuard, ERC721 {
+contract CreatorBadge is Ownable, ReentrancyGuard, ERC721 {
 
 
     using Counters for Counters.Counter;

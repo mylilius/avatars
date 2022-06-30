@@ -8,13 +8,13 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 /// @title DOT Avatar Rare Block
 /// @author TheGreatAxios
 /// @notice ERC721 Contract Representing Rare Building Blocks of DOT Avatars
-contract DOTAvatarRareBlock is AccessControlEnumerable, ERC721URIStorage {
+contract RareBlock is AccessControlEnumerable, ERC721URIStorage {
 
     bytes32 public constant AVATAR_MANAGER_ROLE = keccak256("AVATAR_MANAGER_ROLE");
     bytes32 public constant CONTENT_ROLE = keccak256("CONTENT_ROLE");
     bytes32 public constant LOCKED_ROLE = keccak256("LOCKED_ROLE");
 
-    mapping(uint256 => bool) internalLockBox;
+    mapping(uint256 => bool) private internalLockBox;
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -60,6 +60,10 @@ contract DOTAvatarRareBlock is AccessControlEnumerable, ERC721URIStorage {
         return _newTokenId;
     }
 
+    function numberBlocks() external view returns (uint256) {
+        return _numberBlocks();
+    }
+
     /********************************/
     /******* LockBox Functions ******/
     /********************************/
@@ -74,6 +78,11 @@ contract DOTAvatarRareBlock is AccessControlEnumerable, ERC721URIStorage {
     /*********************************/
     /******* Internal Functions ******/
     /*********************************/
+
+    function _numberBlocks() internal view returns (uint256) {
+        return _tokenIds.current();
+    }
+
     function _isLocked(uint256 _tokenId) internal view returns (bool) {
         return internalLockBox[_tokenId];
     }
