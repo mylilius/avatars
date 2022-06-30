@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: APGL-3.0
 pragma solidity ^0.8.0;
 
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title AvatarGovernor
 /// @author TheGreatAxios
@@ -24,14 +24,14 @@ contract AvatarGovernor is Ownable {
     }
 
     struct AvatarBlocks {
-        string open_file_ai;
-        string head_file_ai;
-        string body_file_ai;
-        string legs_file_ai;
-        string avatar_type;
-        uint256 required_head_size;
-        uint256 required_leg_size;
-        uint256 required_body_size;
+        string openFileAi;
+        string headFileAi;
+        string bodyFileAi;
+        string legsFileAi;
+        string avatarType;
+        uint256 requiredHeadSize;
+        uint256 requiredLegsSize;
+        uint256 requiredBodySize;
         uint256 version;
     }
 
@@ -55,13 +55,13 @@ contract AvatarGovernor is Ownable {
     /********************************/
     /****** Admin Functions *********/
     /********************************/
-    function addChain(string memory _name, uint256 _chain_id, address[3] memory _addresses) external onlyOwner {
+    function addChain(string memory _name, uint256 _chainId, address[3] memory _addresses) external onlyOwner {
         Contracts memory _contracts = Contracts(_name, _addresses[0], _addresses[1], _addresses[2]);
-        _supportedChains[_chain_id] = _contracts;
+        _supportedChains[_chainId] = _contracts;
     }
 
-    function removeChain(uint256 _chain_id) external onlyOwner {
-        delete _supportedChains[_chain_id];
+    function removeChain(uint256 _chainId) external onlyOwner {
+        delete _supportedChains[_chainId];
     }
 
     function addAvatar(string[4] memory _files, string memory _type, uint256[3] memory _sizes) external onlyOwner {
@@ -88,7 +88,7 @@ contract AvatarGovernor is Ownable {
     /**********************************/
     /******* Internal Functions *******/
     /**********************************/
-    function _hasChain(uint256 _chain_id) internal view returns (bool) {
-        return _supportedChains[_chain_id].manager == address(0);
+    function _hasChain(uint256 _chainId) internal view returns (bool) {
+        return _supportedChains[_chainId].manager == address(0);
     }
 }

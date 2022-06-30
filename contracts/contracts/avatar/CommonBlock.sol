@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: APGL-3.0
 pragma solidity ^0.8.0;
 
-import "../../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
-import "../../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "../../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 /// @title DOT Avatar Common Block
 /// @author TheGreatAxios
@@ -12,7 +12,7 @@ contract DOTAvatarCommonBlock is AccessControlEnumerable, ERC1155URIStorage {
 
     bytes32 public constant AVATAR_MANAGER_ROLE = keccak256("AVATAR_MANAGER_ROLE");
     bytes32 public constant CONTENT_ROLE = keccak256("CONTENT_ROLE");
-
+    bytes32 public constant LOCKED_ROLE = keccak256("LOCKED_ROLE");
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;

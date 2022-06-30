@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: APGL-3.0
 pragma solidity ^0.8.0;
 
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/ICreatorBadge.sol";
 import "../interfaces/ICommonBlock.sol";
 import "../interfaces/IRareBlock.sol";
@@ -124,11 +124,11 @@ contract AvatarManager is Ownable {
     }
 
     /// @notice Adds Block after NFT is Minted
-    /// @param _contract_address address of creator
-    /// @param _token_id token id of block
-    function _addBlock(address _contract_address, uint256 _token_id) internal {
+    /// @param _contractAddress address of creator
+    /// @param _tokenId token id of block
+    function _addBlock(address _contractAddress, uint256 _tokenId) internal {
         uint256 _blockPosition = _numberBlocksCreated() == 0 ? 0 : _numberBlocksCreated() - 1;
-        createdBlocks[msg.sender][_blockPosition] = Block(_contract_address, _token_id, block.timestamp);
+        createdBlocks[msg.sender][_blockPosition] = Block(_contractAddress, _tokenId, block.timestamp);
     }
 
     /********************************/
@@ -136,21 +136,21 @@ contract AvatarManager is Ownable {
     /******************************/
 
     /// @notice Updates Creator PRO Nft Badge Contract Address
-    /// @param _new_contract_address address of contract
-    function updateCreatorNFTAddress(address _new_contract_address) external onlyOwner {
-        _creatorNFTAddress = _new_contract_address;
+    /// @param _newContractAddress address of contract
+    function updateCreatorNFTAddress(address _newContractAddress) external onlyOwner {
+        _creatorNFTAddress = _newContractAddress;
     }
 
     /// @notice Updates Common Block Contract Address
-    /// @param _new_contract_address address of contract
-    function updateCommonBlockAddress(address _new_contract_address) external onlyOwner {
-        _commonBlockAddress = _new_contract_address;
+    /// @param _newContractAddress address of contract
+    function updateCommonBlockAddress(address _newContractAddress) external onlyOwner {
+        _commonBlockAddress = _newContractAddress;
     }
 
     /// @notice Updates Rare Block Contract Address
-    /// @param _new_contract_address address of contract
-    function updateRareBlockAddress(address _new_contract_address) external onlyOwner {
-        _rareBlockAddress = _new_contract_address;
+    /// @param _newContractAddress address of contract
+    function updateRareBlockAddress(address _newContractAddress) external onlyOwner {
+        _rareBlockAddress = _newContractAddress;
     }
 
     /// @notice Blacklists a User
