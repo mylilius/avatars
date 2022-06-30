@@ -1,7 +1,9 @@
 {
   "name": "dot_avatars_smart_contracts",
   "version": "0.1.0",
-  "scripts": {},
+  "scripts": {
+    "test": "npx hardhat compile && mocha --require ts-node/register ./test/**/*.ts --timeout 5000 --watch"
+  },
   "author": {
     "email": "thegreataxios@mylilius.com",
     "name": "TheGreatAxios",
