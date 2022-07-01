@@ -41,6 +41,12 @@ contract AvatarManager is Ownable {
         uint256 timestamp;
     }
 
+    constructor(address _creator) {
+        _creatorNFTAddress = _creator;
+        _rareBlockAddress = address(0);
+        _commonBlockAddress = address(0);
+    }
+
     /********************************/
     /****** Public Functions *******/
     /******************************/
