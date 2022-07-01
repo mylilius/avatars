@@ -18,10 +18,15 @@ export const HomePageContainer = styled.div`
 `;
 
 export const AvatarsGraphicContainer = styled.div`
-    background: red;
 `;
+
+export const AvatarGraphicImage = styled.img`
+    height: 100%;
+    width: 100%;
+`;
+
 export const TextWelcomeContainer = styled.div`
-    ${Flex('column', 'flex-start', 'center')};
+    ${Flex('column', 'flex-end', 'center')};
     @media(max-width: 764px) {
         ${Flex('column', 'center', 'center')};
         text-align: center;

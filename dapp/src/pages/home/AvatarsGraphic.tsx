@@ -1,10 +1,11 @@
 import { H3, Text } from "../../utils/text";
-import { AvatarsGraphicContainer } from "./styles";
+import { AvatarsGraphicContainer, AvatarGraphicImage } from "./styles";
+import AvatarGraphic from '../../assets/avatar_graphic_2.svg';
 
 const AvatarsGraphic = () => {
     return (
         <AvatarsGraphicContainer className="home_container">
-            <img src="https://drive.google.com/drive/u/1/folders/1nsuqucrsbavnTZ3VeqsYRP5VA0zZNCGT.png" />
+            <AvatarGraphicImage src={AvatarGraphic} />
         </AvatarsGraphicContainer>
     );
 }
