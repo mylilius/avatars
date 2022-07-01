@@ -27,17 +27,36 @@
     "@types/node": "^16.11.41",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
+    "@web3-react/coinbase-wallet": "8.0.33-beta.0",
+    "@web3-react/core": "8.0.33-beta.0",
+    "@web3-react/eip1193": "8.0.25-beta.0",
+    "@web3-react/empty": "8.0.19-beta.0",
+    "@web3-react/gnosis-safe": "8.0.5-beta.0",
+    "@web3-react/metamask": "8.0.26-beta.0",
+    "@web3-react/network": "8.0.26-beta.0",
+    "@web3-react/types": "8.0.19-beta.0",
+    "@web3-react/url": "8.0.24-beta.0",
+    "@web3-react/walletconnect": "8.0.34-beta.0",
+    "axios": "^0.27.2",
+    "buffer": "^6.0.3",
+    "ethers": "^5.6.9",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "styled-components": "^5.3.5",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "GENERATE_SOURCEMAP=false react-app-rewired start",
+    "build": "GENERATE_SOURCEMAP=false react-app-rewired build",
+    "build:testnet": "GENERATE_SOURCEMAP=false REACT_APP_ENV=development react-app-rewired build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy:testnet": "REACT_APP_ENV=development NODE_ENV=development npm run build:testnet && aws s3 sync build/ s3://sfuel-station-testnet",
+    "deploy:production": "REACT_APP_ENV=production NODE_ENV=production npm run build:production && aws s3 sync build/ s3://sfuel-station-testnet"
   },
   "eslintConfig": {
     "extends": [
@@ -56,5 +75,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.25"
   }
 }
