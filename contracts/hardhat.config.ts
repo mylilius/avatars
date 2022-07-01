@@ -34,15 +34,15 @@ const config: HardhatUserConfig = {
       url: 'http://localhost:8545',
       accounts: ["ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"]
     },
-    astar: {
+    "81": {
       url: process.env.ASTAR_RPC_TESTNET as string,
       accounts: [process.env.PK_TESTNET as string]
     },
-    mylilius: {
+    "1258188407": {
       url: process.env.MYLILIUS_RPC_TESTNET as string,
       accounts: [process.env.PK_TESTNET as string]
     },
-    mumbai: {
+    "80001": {
       url: process.env.MUMBAI_RPC_TESTNET as string,
       accounts: [process.env.PK_TESTNET as string]
     }

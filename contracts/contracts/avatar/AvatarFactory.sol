@@ -23,9 +23,9 @@ contract AvatarFactory is Ownable {
     /**********************/
     event CreateAvatar(address indexed owner);
 
-    constructor (address _dns) {
-        dot_name_service = _dns;
-    }
+    // constructor (address _dns) {
+    //     dot_name_service = _dns;
+    // }
 
     /********************************/
     /****** Public Functions ********/
