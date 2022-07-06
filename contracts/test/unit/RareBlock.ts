@@ -3,7 +3,7 @@ import { BigNumber, Contract } from "ethers";
 import { getContractAddress } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 
-describe("RareBlock Unit Testing", () => {
+xdescribe("RareBlock Unit Testing", () => {
     let contract: Contract | undefined = undefined;
 
     before(async() => {

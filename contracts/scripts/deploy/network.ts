@@ -7,7 +7,7 @@ import _2_Deploy_Creator_Badge from './network/_2_Deploy_Creator_Badge';
 import _3_Deploy_Rare_Lock_Box from './network/_3_Deploy_Rare_LockBox';
 import _4_Deploy_Avatar_Manager from './network/_4_Deploy_Avatar_Manager';
 import _5_Deploy_Rare_Block from './network/_5_Deploy_Rare_Block';
-import { IReturn } from "./types";
+import { IData, IReturn } from "./types";
 
 const log = console.log;
 const error = console.error;
@@ -32,14 +32,24 @@ async function main() {
         const txHash: string = await manager.contract.updateRareBlockAddress(rare.contract.address);
         console.log("Tx Hash: ", txHash);
 
-        const _data: {[key: string]: IReturn} = {
-            payment,
-            creator,
-            lockbox,
-            manager,
-            rare
+        const _data: {[key: string]: IData} = {
+            payment: payment.data,
+            creator: creator.data,
+            lockbox: lockbox.data,
+            manager: manager.data,
+            rare: rare.data
         };
-        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, 'mylilius', JSON.stringify(_data));
+
+        const _addresses: {[key: string]: string} = {
+            payment: payment.data.address,
+            creator: creator.data.address,
+            lockbox: lockbox.data.address,
+            manager: manager.data.address,
+            rare: rare.data.address
+        }
+
+        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, `data.json`, JSON.stringify(_data));
+        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, `addresses.json`, JSON.stringify(_addresses));
     } catch (err: any) {
         error(err.toString());
         throw err;

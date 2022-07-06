@@ -4,83 +4,121 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IAvatar.sol";
 
+/**
+*
+* Token Types
+* 1 => Head
+* 2 => Body
+* 3 => Right Leg
+* 4 => Left Leg
+* 5 = Hat
+* 6 = Right Shoe
+* 7 = Left Shoe
+* 8 = Glasses
+* 9 = Background
+* 10 = Full Body
+* 11 = Full 3D Avatar
+*/
+
+
 /// @title Avatar
 /// @author TheGreatAxios
 /// @notice This contract represents the actual DOT Avatar
 contract Avatar is IAvatar, Ownable {
 
-    /// @notice The Current Avatar Type
-    uint256 private avatarType;
-    
+    /// @notice Locks All Changes
+    bool private isLockEnabled;
+    /// @notice Locks Movement of Assets
+    bool private isAssetLockEnabled;
     /// @notice Current Render is Full Body
-    bool private isFullBody = false;
-
-    /// @notice On initial creation show default
-    bool private isDefault = true;
-
-    /// @notice Stores Extra Blocks
-    mapping(uint256 => Block[]) private inventory;
+    bool private isBlockedBasedEnabled;
+    /// @notice Backaground Enabled
+    bool private isBackgroundEnabled;
+    /// @notice 3D Avatars
+    bool private is3DAvatarEnabled;
+    /// @notice Show Balance
+    bool private isShowBalanceEnabled;
+    /// @notice Custom Color Palette
+    bool private isCustomColorPaletteEnabled;
+    /// @notice Avatar Sized - [0-7, smallest, to largest - Default = 4]
+    uint8 private avatarSize;
 
     /// @notice Head Block
-    Block private head;
+    BuildingBlock private head;
     /// @notice Body Block
-    Block private body;
-    /// @notice Legs Block
-    Block private legs;
+    BuildingBlock private body;
+    /// @notice Right Leg Block
+    BuildingBlock private rightLeg;
+    /// @notice LeftLeg Block
+    BuildingBlock private leftLeg;
     /// @notice Full Body Block
-    Block private full;
+    BuildingBlock private hat;
+    /// @notice Full Body Block
+    BuildingBlock private rightShoe;
+    /// @notice Full Body Block
+    BuildingBlock private leftShoe;
+    /// @notice Full Body Block
+    BuildingBlock private glasses;
+
+    /// @notice Background
+    BuildingBlock private background;
+    /// @notice Full Body
+    BuildingBlock private fullBody;
+    /// @notice 3D Avatar Block
+    BuildingBlock private fullBody3D;
+    /// @notice Personal Color Palette
+    ColorPalette private colorPalette;
+
 
     /// @dev Constructor sets ownership
     /// @param _creator address of owner
     constructor(address _creator) {
         transferOwnership(_creator);
-    }
-
-
-    /// @dev Sets Avatar Type --- Currnelty Not used
-    /// @param _type Avatar Type is UINT256
-    function setAvatarType(uint256 _type) external onlyOwner override {
-        avatarType = _type;
+        isLockEnabled = false;
+        isAssetLockEnabled = false;
+        isBlockedBasedEnabled = true;
+        isBackgroundEnabled = false;
+        is3DAvatarEnabled = false;
+        isShowBalanceEnabled = false;
+        isCustomColorPaletteEnabled = false;
+        avatarSize = 4;
     }
 
     /********************************/
     /****** Owner Functions ********/
     /********************************/
 
-    /// @dev Adds Avatar to Block
-    /// @dev V2 will use Oracle to Check Ownership on BlockBox
-    /// @param _location Location on Avatar Render
+    /// @dev Adds Building Block to Avatar
     /// @param _chainId Chain ID of Block
     /// @param _contractAddress Contract Address on Chain ID
     /// @param _tokenId Token ID in Contract
-    /// @param _contractType Contract Type 721/1155
-    /// @param _setActive Set Active - If True -> Sets to Body Else Adds to Inventory
-    function addAvatarBlock(
-        uint256 _location,
+    /// @param _tokenType Contract Type 721/1155
+    /// @param _tokenURI string
+    function addBuildingBlock(
         uint256 _chainId,
-        address _contractAddress,
         uint256 _tokenId,
-        uint8 _contractType,
-        bool _setActive
+        uint16 _tokenType,
+        address _contractAddress,
+        string memory _tokenURI
     ) external override {
-        Block memory _newBlock = Block(
-            _location,
+        BuildingBlock memory _newBlock = BuildingBlock(
             _chainId,
-            _contractAddress,
             _tokenId,
-            _contractType,
-            _setActive,
-            true
+            _tokenType,
+            _contractAddress,
+            true,
+            _tokenURI
         );
-        if (!_setActive) {
-            _addToInventory(_newBlock, _location);
-        } else {
-            _setAvatarBlock(_newBlock);
-        }
+        _setBuildingBlock(_newBlock);
     }
 
-    function deleteAvatarBlock(uint256 _blockId, uint256 _slotId) external onlyOwner {
-        _removeFromInventory(_blockId, _slotId);
+    /// @notice Auto Sets to Enabled
+    /// @dev Adds Custom Color Palette to Avatar
+    /// @param _background number
+    /// @param _text number
+    function addColorPalette(uint256 _background, uint256 _text) external onlyOwner override {
+        ColorPalette memory _palette = ColorPalette(_background, _text, true);
+        _setColorPalette(_palette);
     }
 
     /// @dev Deletes Avatar Completley
@@ -88,105 +126,132 @@ contract Avatar is IAvatar, Ownable {
         selfdestruct(payable(owner()));
     }
 
+    /// @dev Deletes Block
+    /// @param _tokenType This is the block type
+    function deleteBlock(uint16 _tokenType) external onlyOwner override {
+        if (_tokenType == 1) delete head;
+        if (_tokenType == 2) delete body;
+        if (_tokenType == 3) delete rightLeg;
+        if (_tokenType == 4) delete leftLeg;
+        if (_tokenType == 5) delete hat;
+        if (_tokenType == 6) delete rightShoe;
+        if (_tokenType == 7) delete leftShoe;
+        if (_tokenType == 8) delete glasses;
+        if (_tokenType == 9) delete background;
+        if (_tokenType == 10) delete fullBody;
+        if (_tokenType == 11) delete fullBody3D;
+    }
+
     /// @dev Returns Blocks of Avatar - Temp til Full Build is Done
     /// @return Block[] memory all of the blocks making up the body
-    function getAvatar() external view override returns (Block[] memory){
-        if (isFullBody) {
-            Block[] memory _blocks = new Block[](1);
-            _blocks[0] = full;
-            return _blocks;
+    function getAvatar() external view override returns (BuildingBlock[] memory, ColorPalette memory, uint8) {
+        if (!isBlockedBasedEnabled) {
+            BuildingBlock[] memory _blocks = new BuildingBlock[](2);
+            if (is3DAvatarEnabled) {
+                _blocks[0] = fullBody;
+                _blocks[1] = background;
+            } else {
+                _blocks[0] = fullBody3D;
+                _blocks[1] = background;
+            }
+            return (_blocks, colorPalette, avatarSize);
         } else {
-            Block[] memory _blocks = new Block[](3);
+            BuildingBlock[] memory _blocks = new BuildingBlock[](9);
             _blocks[0] = head;
             _blocks[1] = body;
-            _blocks[2] = legs;
-            return _blocks;
+            _blocks[2] = rightLeg;
+            _blocks[3] = leftLeg;
+            _blocks[4] = hat;
+            _blocks[5] = rightShoe;
+            _blocks[6] = leftShoe;
+            _blocks[7] = glasses;
+            _blocks[8] = background;
+            return (_blocks, colorPalette, avatarSize);
         }
     }
 
-    function getBlocks() external view returns (Block[] memory) {
-        uint256 _length = 4 + _getInventoryLength(1) + _getInventoryLength(2) + _getInventoryLength(3) + _getInventoryLength(4);
-        Block[] memory _blocks = new Block[](_length);
-        uint256 index = 4;
-        _blocks[0] = head;
-        _blocks[1] = body;
-        _blocks[2] = legs;
-        _blocks[3] = full;
-        for (uint256 i = 0; i < _getInventoryLength(1); i++) {
-            _blocks[index] = inventory[1][i];
-            index++;
-        }
-        for (uint256 i = 0; i < _getInventoryLength(2); i++) {
-            _blocks[index] = inventory[2][i];
-            index++;
-        }
-        for (uint256 i = 0; i < _getInventoryLength(3); i++) {
-            _blocks[index] = inventory[3][i];
-            index++;
-        }
-        for (uint256 i = 0; i < _getInventoryLength(4); i++) {
-            _blocks[index] = inventory[4][i];
-            index++;
-        }
-
-        return _blocks;
+    function toggleAssetLock(bool _toggle) external onlyOwner override {
+        _toggleAssetLock(_toggle);
     }
-    
+    function toggleBackground(bool _toggle) external onlyOwner override {
+        _toggleBackground(_toggle);
+    }
+    function toggleBlockBased(bool _toggle) external onlyOwner override {
+        _toggleBlockBased(_toggle);
+    }
+    function toggleColorPalette(bool _toggle) external onlyOwner override {
+        _toggleColorPalette(_toggle);
+    }
+    function toggleLock(bool _toggle) external onlyOwner override {
+        _toggleLock(_toggle);
+    }
+    function toggleShowBalance(bool _toggle) external onlyOwner override {
+        _toggleShowBalance(_toggle);
+    }
+    function toggle3DAvatar(bool _toggle) external onlyOwner override {
+        _toggle3DAvatar(_toggle);
+    }
+
     /**********************************/
     /******* Internal Functions *******/
     /**********************************/
-    function _setAvatarBlock(Block memory _newBlock) internal {
-        if (_newBlock.location == 1) {
-            if (head.isActive) {
-                _addToInventory(head, 1);
-            }
-            head = _newBlock;
-        } else if (_newBlock.location == 2) {
-            if (body.isActive) {
-                _addToInventory(body, 2);
-            }
-            body = _newBlock;
-        } else if (_newBlock.location == 3) {
-            if (legs.isActive) {
-                _addToInventory(legs, 3);
-            }
-            legs = _newBlock;
-        } else if (_newBlock.location == 4) {
-            if (full.isActive) {
-                _addToInventory(full, 4);
-            }
-            full = _newBlock;
+    function _setBuildingBlock(BuildingBlock memory _newBlock) internal {
+        if (_newBlock.tokenType == 1) head = _newBlock;
+        if (_newBlock.tokenType == 2) body = _newBlock;
+        if (_newBlock.tokenType == 3) rightLeg = _newBlock;
+        if (_newBlock.tokenType == 4) leftLeg = _newBlock;
+        if (_newBlock.tokenType == 5) hat = _newBlock;
+        if (_newBlock.tokenType == 6) rightShoe = _newBlock;
+        if (_newBlock.tokenType == 7) leftShoe = _newBlock;
+        if (_newBlock.tokenType == 8) glasses = _newBlock;
+        if (_newBlock.tokenType == 9) {
+            background = _newBlock;
+            _toggleBackground(true);
+        }
+        if (_newBlock.tokenType == 10) {
+            fullBody = _newBlock;
+            _toggleBlockBased(false);
+            _toggle3DAvatar(false);
+        }
+        if (_newBlock.tokenType == 11) {
+            fullBody3D = _newBlock;
+            _toggleBlockBased(false);
+            _toggle3DAvatar(true);
+        }
+        if (_newBlock.tokenType <= 8) {
+            _toggleBlockBased(true);
+            _toggle3DAvatar(false);
         }
     }
 
-    /// @dev Adds Block to Inventory
-    /// @param _existingBlock The New or Existing Block
-    /// @param _blockId Of Part Being Added
-    function _addToInventory(Block memory _existingBlock, uint256 _blockId) internal {
-        uint256 _slot = _getInventoryLength(_blockId) == 0 ? 0 : _getInventoryLength(_blockId) - 1;
-        inventory[_blockId][_slot] = _existingBlock;
+    // function _setGeneralBlock(GeneralBlock memory _newBlock) internal {
+        
+    // }
+
+    function _setColorPalette(ColorPalette memory _colorPalette) internal {
+        colorPalette = _colorPalette;
+        _toggleColorPalette(true);
     }
 
-    function _removeFromInventory(uint256 _blockId, uint256 _slot) internal {
-        require(inventory[_blockId][_slot].isAdded, "This Block Does Not Exist");
-        delete inventory[_blockId][_slot];
+    function _toggleAssetLock(bool _toggle) internal {
+        isAssetLockEnabled = _toggle;
     }
-
-    /// @dev Gets Inventory Length of Type
-    /// @param _blockId As stated above
-    /// @return uint256 of the length
-    function _getInventoryLength(uint256 _blockId) internal view returns (uint256) {
-        return inventory[_blockId].length;
+    function _toggleBackground(bool _toggle) internal {
+        isBackgroundEnabled = _toggle;
     }
-
-    /********************************/
-    /******* Public Functions *******/
-    /********************************/
-    /// @dev Returns Default Image
-    /// @return string memory Default DOT Avatar
-    function getDefault() external pure override returns (string memory) {
-        return "";
+    function _toggleBlockBased(bool _toggle) internal {
+        isBlockedBasedEnabled = _toggle;
     }
-
-
+    function _toggleColorPalette(bool _toggle) internal {
+        isCustomColorPaletteEnabled = _toggle;
+    }
+    function _toggleLock(bool _toggle) internal {
+        isLockEnabled = _toggle;
+    }
+    function _toggleShowBalance(bool _toggle) internal {
+        isShowBalanceEnabled = _toggle;
+    }
+    function _toggle3DAvatar(bool _toggle) internal {
+        is3DAvatarEnabled = _toggle;
+    }
 }

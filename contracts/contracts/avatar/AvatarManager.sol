@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/ICreatorBadge.sol";
 import "../interfaces/ICommonBlock.sol";
 import "../interfaces/IRareBlock.sol";
-
+import "hardhat/console.sol";
 /// @title Avatar Manager Contract
 /// @author TheGreatAxios
 /// @notice Proxy/Interhitance Calls the NFT Contracts for Creation
@@ -28,7 +28,8 @@ contract AvatarManager is Ownable {
 
     /// @notice Created Blocks
     /// @dev Tracks Created Blocks
-    mapping(address => Block[]) private createdBlocks;
+    mapping(address => mapping(uint256 => Block)) private createdBlocks;
+    mapping(address => uint256) private createdBlocksCounter;
 
     /// @notice Pausable Contract State
     /// @dev OnlyOwner
@@ -56,7 +57,7 @@ contract AvatarManager is Ownable {
     /// @param _tokenURI Token URI of Common Block
     /// @param _amount Number of NFTs to to mint of common type
     function createCommonBlock(string memory _tokenURI, uint256 _amount) external {
-        require(_canMint());
+        require(_canMint(), "Cannot Mint");
         /// 3 Create Block
         ICommonBlock _commonBlock = _commonBlockContract();
         uint256 _tokenId = _commonBlock.createBlock(msg.sender, _tokenURI, _amount);
@@ -67,7 +68,7 @@ contract AvatarManager is Ownable {
     /// @dev Calls Rare Block NFT Contract
     /// @param _tokenURI Token URI of Common Block
     function createRareBlock(string memory _tokenURI) external {
-        require(_canMint());
+        // require(_canMint(), "Cannot Mint");
         /// 3 Create Block
         IRareBlock _rareBlock = _rareBlockContract();
         uint256 _tokenId = _rareBlock.createBlock(msg.sender, _tokenURI);
@@ -86,8 +87,11 @@ contract AvatarManager is Ownable {
         require(!blacklist[msg.sender], "Address Blacklisted");
         /// 2 -> Checks for Whitelist
         if (!whitelist[msg.sender]) {
+            console.log("Not Whitelist");
             /// 3 -> Checks if Free Tier Exceeded
             if (_numberBlocksCreated() >= 3) {
+                console.log("3 or More");
+                console.log(_hasCreatorNFT());
                 /// 4 -> Returns if Has PRO Creator NFT
                 return _hasCreatorNFT();
             }
@@ -102,13 +106,15 @@ contract AvatarManager is Ownable {
     /// @return bool if has badge
     function _hasCreatorNFT() internal view returns (bool) {
         ICreatorBadge _badge = _proBadgeContract();
+        console.log("Number Badges: ", _badge.balanceOf(msg.sender));
         return _badge.balanceOf(msg.sender) >= 1;
     }
 
     /// @notice Checks # of Blocks Created
     /// @return uint256 of # of blocks created
     function _numberBlocksCreated() internal view returns (uint256) {
-        return createdBlocks[msg.sender].length;
+        console.log(createdBlocksCounter[msg.sender]);
+        return createdBlocksCounter[msg.sender];
     }
 
     /// @notice Creates Pro Badge Inherited Contract
@@ -133,8 +139,10 @@ contract AvatarManager is Ownable {
     /// @param _contractAddress address of creator
     /// @param _tokenId token id of block
     function _addBlock(address _contractAddress, uint256 _tokenId) internal {
-        uint256 _blockPosition = _numberBlocksCreated() == 0 ? 0 : _numberBlocksCreated() - 1;
+        uint256 _blockPosition = _numberBlocksCreated();
+        console.log("Block Position: ", _blockPosition);
         createdBlocks[msg.sender][_blockPosition] = Block(_contractAddress, _tokenId, block.timestamp);
+        createdBlocksCounter[msg.sender] = createdBlocksCounter[msg.sender] + 1;
     }
 
     /********************************/
