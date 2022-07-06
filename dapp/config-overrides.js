@@ -6,10 +6,14 @@ module.exports = function override(config, env) {
         url: require.resolve('url'),
         assert: require.resolve('assert'),
         buffer: require.resolve('buffer'),
+        path: require.resolve('path-browserify'),
+        os: require.resolve("os-browserify/browser"),
+        fs: false,
+        module: false
     };
     config.plugins.push(
         new webpack.ProvidePlugin({
-            process: 'process/browser',
+            process: 'process/browser.js',
             Buffer: ['buffer', 'Buffer'],
         }),
     );

@@ -4,7 +4,7 @@ import { BigNumber, Contract, Signer, Wallet } from "ethers";
 import { getContractAddress } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 
-describe("Create Badge Unit Testing", () => {
+xdescribe("Create Badge Unit Testing", () => {
     let contract: Contract | undefined = undefined;
     let paymentManager: Contract | undefined = undefined;
     let signer: Signer;

@@ -3,7 +3,7 @@ import FileStorage from "../filestorage";
 
 import _1_Deploy_Avatar_Governor from './mylilius/_1_Deploy_Governor';
 import _2_Deploy_Avatar_Factory from './mylilius/_2_Deploy_Avatar_Factory';
-import { IReturn } from "./types";
+import { IData, IReturn } from "./types";
 
 const log = console.log;
 const error = console.error;
@@ -18,12 +18,18 @@ async function main() {
         const governor: IReturn = await _1_Deploy_Avatar_Governor();
         /// 2 Deploy Avatar Factory - MyLilius
         const factory: IReturn = await _2_Deploy_Avatar_Factory();
-        const _data: {[key: string]: IReturn} = {
-            governor,
-            factory
+        const _data: {[key: string]: IData} = {
+            governor: governor.data,
+            factory: factory.data
         };
 
-        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, 'mylilius.json', JSON.stringify(_data));
+        const _addresses: {[key: string]: string} = {
+            governor: governor.data.address,
+            factory: factory.data.address
+        };
+
+        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, 'data.json', JSON.stringify(_data));
+        _fileStorage.writeFile(__dirname, `${_network!}/${_currentVersion}`, 'addresses.json', JSON.stringify(_addresses));
 
     } catch (err: any) {
         error(err.toString());

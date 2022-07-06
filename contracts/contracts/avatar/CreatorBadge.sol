@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: APGL-3.0
 pragma solidity ^0.8.0;
 
+// import "@chainlink/contracts/src/v0.8/interfaces/AggregatorInterface.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -13,9 +14,10 @@ import "../interfaces/ICreatorBadge.sol";
 /// @notice ERC721 Contract Representing Creator PRO Badges
 contract CreatorBadge is Ownable, ReentrancyGuard, ERC721 {
 
-
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+
+    // AggregatorInterface internal priceFeed;
 
     address private paymentAddress;
 
@@ -54,6 +56,10 @@ contract CreatorBadge is Ownable, ReentrancyGuard, ERC721 {
     * Public Functions
     *
     */
+
+    function getNativePrice() external view returns (uint256) {
+        return nativeCost;
+    }
 
     /// @notice Utilizes Native Blockchain for Payment
     /// @dev Payable Functions that Allows the Purchasing of a Creator Badge
