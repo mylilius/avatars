@@ -9,6 +9,5 @@ export const AppContainer = styled.div`
     @media(max-width: 764px) {
         max-height: 100vh;
     }
-    background: linear-gradient(135deg, ${Theme.colors.primary}, ${Theme.colors.secondary});
-    
+    background: linear-gradient(135deg, ${Theme.colors.primary}, ${Theme.colors.secondary});  
 `;

@@ -11,3 +11,15 @@ export const WalletContainer = styled.div`
     ${Flex('row', 'center', 'center')};
     color: white;
 `;
+
+export const ActivatingContainer = styled.div``;
+export const ActiveContainer = styled.div`
+    height: 100%;
+    width: 100%;
+    ${Flex('row', 'center', 'center')};
+    z-index: 200;
+`;
+export const ConnectContainer = styled.div`
+    width: 100%;.
+    ${Flex('row', 'center', 'center')};
+`;

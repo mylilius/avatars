@@ -3,19 +3,31 @@ pragma solidity ^0.8.0;
 
 interface IAvatar {
 
-    struct Block {
-        uint256 location;
+    struct BuildingBlock {
         uint256 chainId;
-        address contractAddress;
         uint256 tokenId;
-        uint8 tokenType;
-        bool isActive;
-        bool isAdded;
+        uint16 tokenType;
+        address contractAddress;
+        bool exists;
+        string tokenURI;
     }
 
-    function setAvatarType(uint256 _type) external;
-    function addAvatarBlock(uint256 _location, uint256 _chainId, address _contractAddress, uint256 _tokenId, uint8 _contractType, bool _setActive) external;
-    function getAvatar() external returns (Block[] memory);
+    struct ColorPalette {
+        uint256 background;
+        uint256 text;
+        bool exists;
+    }
+
+    function addBuildingBlock(uint256 _chainId, uint256 _tokenId, uint16 _tokenType, address _contractAddress, string memory _tokenURI) external;
+    function addColorPalette(uint256 _background, uint256 _text) external;
+    function deleteBlock(uint16 _tokenType) external;
     function deleteAvatar() external;
-    function getDefault() external returns (string memory);
+    function getAvatar() external returns (BuildingBlock[] memory, ColorPalette memory, uint8);
+    function toggleAssetLock(bool _toggle) external;
+    function toggleBackground(bool _toggle) external;
+    function toggleBlockBased(bool _toggle) external;
+    function toggleColorPalette(bool _toggle) external;
+    function toggleLock(bool _toggle) external;
+    function toggleShowBalance(bool _toggle) external;
+    function toggle3DAvatar(bool _toggle) external;   
 }
