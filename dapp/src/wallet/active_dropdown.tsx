@@ -8,10 +8,11 @@ const Dropdown = styled.div`
     top: 0;
     right: 0;
     width: 100%;
-    min-width: 150%;
+    min-width: 100%;
     z-index: 2000;
     background: ${Theme.colors.background};
-    min-height: 35vh;
+    min-height: 38vh;
+    height: auto;
     height: auto;
     ${BorderRadius()};
     border: 1px solid ${Theme.colors.primary};
@@ -25,7 +26,7 @@ const Dropdown = styled.div`
 `;
 
 const Row = styled.div`
-    ${Flex('row', 'center', 'space-between', 'nowrap')};
+    ${Flex('row', 'center', 'space-between', 'wrap')};
 `;
 
 const SVGContainer = styled.div`
@@ -67,6 +68,7 @@ const NavigationButton = styled.button`
         background: ${Theme.colors.primary};
     }
     padding: 4px 0;
+    margin: 4px 0;
 `;
 
 interface IProps {
@@ -113,6 +115,16 @@ const ActiveWalletDropDown = ({ close, svgElement, account, balance, networkTick
                         close();
                         navigate('creator');
                     }}>Creator Portal</NavigationButton>
+                    <NavigationButton onClick={(e): void => {
+                        e.preventDefault();
+                        close();
+                        navigate('gas-station');
+                    }}>Get Gas</NavigationButton>
+                    {/* <NavigationButton onClick={(e) => {
+                        e.preventDefault();
+                        close();
+                        navigate('creator');
+                    }}>Creator Portal</NavigationButton> */}
                 </Row>
             </SelectNetworkSection>
             <SubText onClick={(e: { preventDefault: () => void; }) => {

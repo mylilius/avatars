@@ -12,6 +12,7 @@ import { MyAvatarPage } from './MyAvatar';
 
 import { useEffect } from 'react';
 import { ConnectWallet } from './ConnectWallet';
+import { GasStation } from './GasStation';
 function App() {
 
   useEffect(() => {
@@ -28,6 +29,7 @@ function App() {
             <Route path='/creator' element={<CreatorPage /> } />
             <Route path='/myavatar' element={<MyAvatarPage /> } />
             <Route path='/connect' element={<ConnectWallet />} />
+            <Route path='/gas-station' element={<GasStation />} />
           </Routes>
         </Router>
       </Web3ReactProvider>
