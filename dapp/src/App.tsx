@@ -5,17 +5,29 @@ import { AppContainer } from './Application';
 import { Web3ReactProvider } from '@web3-react/core';
 import Web3Connectors from './utils/web3_connectors';
 import * as Component from './components';
-import * as Page from './pages';
+
+import { HomePage } from './Home';
+import { CreatorPage } from './Creator';
+import { MyAvatarPage } from './MyAvatar';
+
+import { useEffect } from 'react';
+import { ConnectWallet } from './ConnectWallet';
 function App() {
+
+  useEffect(() => {
+    console.log("Connected");
+  }, [])
+
   return (
     <AppContainer>
       <Web3ReactProvider connectors={Web3Connectors}>        
         <Router>
           <Component.Navigation />
           <Routes>
-            <Route path='/' element={<Page.HomePage /> } />
-            <Route path='/creator' element={<Page.CreatorPage /> } />
-            <Route path='/myavatar' element={<Page.MyAvatarPage /> } />
+            <Route path='/' element={<HomePage /> } />
+            <Route path='/creator' element={<CreatorPage /> } />
+            <Route path='/myavatar' element={<MyAvatarPage /> } />
+            <Route path='/connect' element={<ConnectWallet />} />
           </Routes>
         </Router>
       </Web3ReactProvider>
