@@ -26,7 +26,6 @@ const SHIBUYA: AddEthereumChainParameter['nativeCurrency'] = {
     decimals: 18
 };
 
-console.log(process.env);
 const TESTNET_CHAINS: { [chainId: number]: ChainInformation } = {
     1258188407: {
       urls: ['https://staging-v2.skalenodes.com/v1/naive-musty-merope'],
@@ -47,14 +46,14 @@ const TESTNET_CHAINS: { [chainId: number]: ChainInformation } = {
         blockExplorerUrls: ['https://blockscout.com/shibuya'],
     },
     80001: {
-        urls: ['https://polygon-mumbai.g.alchemy.com/v2/' + process.env.REACT_APP_ALCHEMY_KEY_80001],
+        urls: ['https://rpc-mumbai.maticvigil.com'],
         name: 'Polygon (Mumbai) Testnet',
         nativeCurrency: MATIC,
         blockExplorerUrls: ['https://mumbai.polygonscan.com'],
     }
 }
 
-const CHAINS: {[chainId: number]: ChainInformation} = process.env.NODE_ENV === 'development' ? TESTNET_CHAINS : {};
+const CHAINS: {[chainId: number]: ChainInformation} = process.env.REACT_APP_ENV === 'testnet' ? TESTNET_CHAINS : {};
 
 export {
     type ChainInformation,

@@ -4,11 +4,14 @@ import { URLS } from '../../utils/wallet';
 
 export const [coinbaseWallet, hooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
-    new CoinbaseWallet({
-      actions,
-      options: {
-        url: URLS[1258188407][0],
-        appName: 'web3-react',
-      },
-    })
+    {
+      console.log(URLS);
+      return new CoinbaseWallet({
+        actions,
+        options: {
+          url: URLS[1258188407][0],
+          appName: 'web3-react',
+        },
+      })
+    }
 );
